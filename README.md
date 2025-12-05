@@ -44,3 +44,4 @@ Diplom_3/
           LoginTest.java             # тесты авторизации (4 способа)
           PersonalAccountTest.java   # переходы в личный кабинет и выход
           # (опционально) RegisterTest.java
+
