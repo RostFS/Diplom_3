@@ -3,10 +3,15 @@ package org.example.pages;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 
 public class MainPage {
 
     private final WebDriver driver;
+    private final WebDriverWait wait;
 
     // --- Локаторы конструктора ---
     private final By bunsTab = By.xpath("//span[text()='Булки']/parent::div");
@@ -26,8 +31,13 @@ public class MainPage {
     private final By makeOrderButton =
             By.xpath("//button[contains(text(),'Оформить заказ')]");
 
+    // Модальный оверлей, который иногда перекрывает хедер
+    private final By modalOverlay =
+            By.xpath("//div[contains(@class,'Modal_modal_overlay')]");
+
     public MainPage(WebDriver driver) {
         this.driver = driver;
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(5));
     }
 
     // ---------- Методы для конструктора ----------
@@ -49,16 +59,25 @@ public class MainPage {
         return active.getText();
     }
 
-    // ---------- Методы для логина ----------
+    // ---------- Методы для логина / личного кабинета ----------
 
     /** Клик по кнопке "Войти в аккаунт" на главной */
     public void clickLoginToAccountButton() {
         driver.findElement(loginToAccountButton).click();
     }
 
-    /** Клик по кнопке "Личный Кабинет" в шапке */
+    /** Клик по кнопке "Личный Кабинет" в шапке с учётом модального оверлея */
     public void clickPersonalAccountButton() {
-        driver.findElement(personalAccountButton).click();
+        // Если поверх страницы висит оверлей модального окна — ждём, пока он исчезнет
+        try {
+            wait.until(ExpectedConditions.invisibilityOfElementLocated(modalOverlay));
+        } catch (Exception ignored) {
+            // Оверлея могло и не быть — это нормально
+        }
+
+        // Ждём, пока кнопка станет кликабельной, и кликаем по ней
+        wait.until(ExpectedConditions.elementToBeClickable(personalAccountButton))
+                .click();
     }
 
     /** Проверяем, что кнопка "Оформить заказ" видна (пользователь авторизован) */
