@@ -2,20 +2,23 @@ package org.example.pages;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.time.Duration;
 
 public class RegisterPage {
 
     private final WebDriver driver;
+    private final WebDriverWait wait;
 
-    // Поле "Имя"
+    // --- Поля формы регистрации ---
     private final By nameInput =
             By.xpath("//label[text()='Имя']/following-sibling::input");
 
-    // Поле "Email"
     private final By emailInput =
             By.xpath("//label[text()='Email']/following-sibling::input");
 
-    // Поле "Пароль"
     private final By passwordInput =
             By.xpath("//label[text()='Пароль']/following-sibling::input");
 
@@ -23,40 +26,44 @@ public class RegisterPage {
     private final By registerButton =
             By.xpath("//button[text()='Зарегистрироваться']");
 
-    // Ссылка "Войти" на странице регистрации
+    // Сообщение об ошибке под полем пароля
+    // (текст у Практикума — "Некорректный пароль")
+    private final By passwordError =
+            By.xpath("//p[contains(@class,'input__error') and contains(text(),'Некорректный пароль')]");
+
+    // Линк "Войти" на странице регистрации
     private final By loginLink =
             By.xpath("//a[text()='Войти']");
 
-    // Сообщение об ошибке "Некорректный пароль"
-    private final By passwordError =
-            By.xpath("//p[contains(text(),'Некорректный пароль')]");
-
     public RegisterPage(WebDriver driver) {
         this.driver = driver;
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(5));
     }
 
-    // ----- Действия для регистрации -----
+    // ---------- Действия с полями ----------
 
     public void setName(String name) {
-        driver.findElement(nameInput).clear();
+        wait.until(ExpectedConditions.elementToBeClickable(nameInput)).clear();
         driver.findElement(nameInput).sendKeys(name);
     }
 
     public void setEmail(String email) {
-        driver.findElement(emailInput).clear();
+        wait.until(ExpectedConditions.elementToBeClickable(emailInput)).clear();
         driver.findElement(emailInput).sendKeys(email);
     }
 
     public void setPassword(String password) {
-        driver.findElement(passwordInput).clear();
+        wait.until(ExpectedConditions.elementToBeClickable(passwordInput)).clear();
         driver.findElement(passwordInput).sendKeys(password);
     }
 
     public void clickRegisterButton() {
-        driver.findElement(registerButton).click();
+        wait.until(ExpectedConditions.elementToBeClickable(registerButton)).click();
     }
 
-    /** Полная регистрация: заполняем все поля и жмём "Зарегистрироваться" */
+    /**
+     * Заполняет форму и нажимает "Зарегистрироваться".
+     */
     public void register(String name, String email, String password) {
         setName(name);
         setEmail(email);
@@ -64,15 +71,18 @@ public class RegisterPage {
         clickRegisterButton();
     }
 
-    // ----- То, что уже использует твой LoginTest -----
-
+    /**
+     * Переход по ссылке "Войти" (используется в тестах логина).
+     */
     public void clickLoginLink() {
-        driver.findElement(loginLink).click();
+        wait.until(ExpectedConditions.elementToBeClickable(loginLink)).click();
     }
 
-    // ----- Ошибка пароля -----
-
-    public String getPasswordErrorText() {
-        return driver.findElement(passwordError).getText();
+    /**
+     * Проверка, что появилось сообщение об ошибке некорректного пароля.
+     */
+    public boolean isPasswordErrorVisible() {
+        return !driver.findElements(passwordError).isEmpty()
+                && wait.until(ExpectedConditions.visibilityOfElementLocated(passwordError)).isDisplayed();
     }
 }
