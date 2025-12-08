@@ -1,18 +1,18 @@
 # Диплом. Задание 3 — веб-приложение Stellar Burgers
 
-Автоматизированные UI-тесты для веб-приложения [Stellar Burgers](https://stellarburgers.nomoreparties.site/).  
-Проект покрывает ключевые пользовательские сценарии: работу конструктора бургера, авторизацию, переходы в личный кабинет и выход из аккаунта.
+Автоматизированные UI-тесты для веб-приложения [Stellar Burgers](https://stellarburgers.education-services.ru/).  
+Покрываются основные пользовательские сценарии: конструктор бургера, авторизация, регистрация и личный кабинет.
 
 ---
 
-## Стек
+## Технологический стек
 
-- **Язык:** Java 11
-- **Сборщик:** Maven
-- **Тестовый фреймворк:** JUnit 4
-- **UI-автоматизация:** Selenium WebDriver 4.7.2
-- **Браузеры:** Google Chrome (по умолчанию), Yandex Browser
-- **Паттерн:** Page Object
+- Java 11
+- Maven
+- JUnit 4
+- Selenium WebDriver 4.7.2
+- Браузеры: Google Chrome, Yandex Browser
+- Паттерн: Page Object
 
 ---
 
@@ -28,19 +28,19 @@ Diplom_3/
       java/
         org/example/
           browser/
-            BrowserFactory.java      # фабрика WebDriver (Chrome + Yandex)
+            BrowserFactory.java      # фабрика WebDriver
           pages/
-            MainPage.java            # главная страница с конструктором
-            LoginPage.java           # страница логина
-            RegisterPage.java        # страница регистрации
-            ForgotPasswordPage.java  # страница восстановления пароля
+            MainPage.java            # главная страница
+            LoginPage.java           # логин
+            RegisterPage.java        # регистрация
+            ForgotPasswordPage.java  # восстановление пароля
             ProfilePage.java         # личный кабинет
 
     test/
       java/
         org/example/
-          BaseTest.java              # общая настройка WebDriver
-          ConstructorTabsTest.java   # тесты вкладок конструктора
-          LoginTest.java             # тесты авторизации (4 способа)
-          PersonalAccountTest.java   # переходы в личный кабинет и выход
-          # (опционально) RegisterTest.java
+          BaseTest.java              # базовый класс
+          ConstructorTabsTest.java   # тесты конструктора
+          LoginTest.java             # тесты авторизации
+          PersonalAccountTest.java   # тесты личного кабинета
+          RegisterTest.java          # тесты регистрации
